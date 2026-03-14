@@ -38,6 +38,10 @@ void adaugaNodLaFinal(Lista *l, Nod *n);
 Lista *creazaListaFisier(FILE *f);
 void afiseazaMasina(Masina *m);
 void afiseazaLista(Lista *l);
+Masina *getMasinaById(Lista *l, int id);
+void adaugaMasinaDupaId(Lista *l, Masina *m, int id);
+void stergeNod(Lista *l, Nod **n);
+void stergeMasiniDinSeria(Lista *l, unsigned char serie);
 void dezalocaMasina(Masina **m);
 void dezalocaLista(Lista **l);
 
@@ -48,6 +52,22 @@ int main()
         return 1;
 
     Lista *lista = creazaListaFisier(f);
+    afiseazaLista(lista);
+
+    Masina *m1 = getMasinaById(lista, 1);
+    Masina *m10 = getMasinaById(lista, 10);
+    Masina *m20 = getMasinaById(lista, 20);
+    afiseazaMasina(m1);
+    afiseazaMasina(m10);
+    afiseazaMasina(m20);
+
+    Masina *m11 = creazaMasina(11, 4, 5500.0f, "punto", "marcel", 'A');
+    Masina *m12 = creazaMasina(12, 2, 11499.99, "bmw", "viorel", 'S');
+    adaugaMasinaDupaId(lista, m11, 4);
+    adaugaMasinaDupaId(lista, m11, 12);
+    adaugaMasinaDupaId(lista, m12, 10);
+    afiseazaLista(lista);
+    stergeMasiniDinSeria(lista, 'A');
     afiseazaLista(lista);
 
     dezalocaLista(&lista);
@@ -213,6 +233,88 @@ void afiseazaLista(Lista *l)
     {
         afiseazaMasina(p->masina);
         p = p->next;
+    }
+}
+
+Masina *getMasinaById(Lista *l, int id)
+{
+    if (!l)
+        return NULL;
+
+    Nod *p = l->prim;
+    while (p)
+    {
+        if (p->masina->id == id)
+            return p->masina;
+        p = p->next;
+    }
+
+    return NULL;
+}
+
+void adaugaMasinaDupaId(Lista *l, Masina *m, int id)
+{
+    if (!l || !m)
+        return;
+    Nod *n = creazaNod(m);
+    if (!n)
+        return;
+
+    Nod *p = l->prim;
+    while (p)
+    {
+        if (p->masina->id == id)
+        {
+            n->next = p->next;
+            p->next = n;
+            return;
+        }
+        p = p->next;
+    }
+}
+
+void stergeNod(Lista *l, Nod **n)
+{
+    if (!l || !n || !*n)
+        return;
+
+    Nod *target = *n;
+
+    if (l->prim == target)
+    {
+        l->prim = target->next;
+    }
+    else
+    {
+        Nod *p = l->prim;
+
+        while (p && p->next != target)
+            p = p->next;
+        // daca am parcursa toata lista si p == NULL, inseamna ca nu am gasit target
+        if (!p)
+            return;
+
+        p->next = target->next;
+    }
+
+    dezalocaMasina(&target->masina);
+    free(target);
+    *n = NULL;
+}
+
+void stergeMasiniDinSeria(Lista *l, unsigned char serie)
+{
+    if (!l)
+        return;
+
+    Nod *p = l->prim;
+    while (p)
+    {
+        Nod *temp = p->next;
+        if (p->masina->serie == serie)
+            stergeNod(l, &p);
+
+        p = temp;
     }
 }
 
