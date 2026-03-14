@@ -41,6 +41,7 @@ Lista *citesteListaFisier(const char *numeFisier);
 void adaugaNodLaSfarsit(Lista *lista, Nod *nod);
 void afiseazaMasina(Masina *masina);
 void afiseazaLista(Lista *lista);
+void stergeMasinaDupaId(Lista *lista, int id);
 void stergeMasina(Masina **masina);
 void stergeLista(Lista **lista);
 
@@ -234,6 +235,19 @@ void afiseazaLista(Lista *lista)
     {
         afiseazaMasina(p->masina);
         p = p->next;
+    }
+}
+
+void stergeMasinaDupaId(Lista *lista, int id)
+{
+    if (!lista || !lista->prim)
+        return;
+
+    Nod *p = lista->prim;
+
+    if (p->masina->id == id)
+    {
+        // to do
     }
 }
 
