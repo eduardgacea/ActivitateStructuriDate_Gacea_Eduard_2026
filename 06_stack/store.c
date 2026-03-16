@@ -23,6 +23,7 @@ struct Node
 struct Stack
 {
     Node *first;
+    int size;
 };
 
 // constructors
@@ -32,7 +33,9 @@ Stack *createStack();
 
 // stack specific methods
 void push(Stack *stack, Store *store);
-Node *pop(Stack *stack);
+Store *pop(Stack *stack);
+Store *peek(Stack *stack);
+int size(Stack *stack);
 
 // logging
 void logStore(Store *store);
@@ -62,15 +65,33 @@ int main()
     push(stack, store3);
     push(stack, store4);
     logStack(stack);
+    printf("stack size: %d\n", size(stack));
+    printf("------------------------\n");
 
-    Node *node = pop(stack);
-    logStore(node->store);
+    Store *store = pop(stack);
+    logStore(store);
+    printf("------------------------\n");
     logStack(stack);
-    freeNode(&node);
-    logNode(node);
+    printf("stack size: %d\n", size(stack));
+    printf("------------------------\n");
+    freeStore(&store);
+    logStore(store);
+    printf("------------------------\n");
+
+    Store *peekedStore = peek(stack);
+    logStore(peekedStore);
+    printf("------------------------\n");
+
+    pop(stack);
+    pop(stack);
+    pop(stack);
+    logStack(stack);
+    printf("stack size: %d\n", size(stack));
+    printf("------------------------\n");
 
     freeStack(&stack);
     logStack(stack);
+    printf("stack size: %d\n", size(stack));
 
     return 0;
 }
@@ -129,6 +150,7 @@ Stack *createStack()
         return NULL;
 
     stack->first = NULL;
+    stack->size = 0;
 
     return stack;
 }
@@ -144,23 +166,42 @@ void push(Stack *stack, Store *store)
     if (stack->first == NULL)
     {
         stack->first = node;
+        stack->size++;
         return;
     }
 
     node->next = stack->first;
     stack->first = node;
+    stack->size++;
 }
 
-Node *pop(Stack *stack)
+Store *pop(Stack *stack)
 {
     if (!stack || !stack->first)
         return NULL;
 
     Node *node = stack->first;
     stack->first = node->next;
-    node->next = NULL;
+    Store *store = node->store;
 
-    return node;
+    free(node);
+
+    stack->size--;
+
+    return store;
+}
+
+Store *peek(Stack *stack)
+{
+    if (!stack || !stack->first)
+        return NULL;
+
+    return stack->first->store;
+}
+
+int size(Stack *stack)
+{
+    return stack ? stack->size : 0;
 }
 
 void logStore(Store *store)
