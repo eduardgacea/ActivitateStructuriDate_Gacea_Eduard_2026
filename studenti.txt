@@ -1,0 +1,8 @@
+ionescu,19,7.74
+popescu,21,5.59
+georgescu,20,8.81
+vasilescu,24,9.95
+marinescu,29,4.45
+tomescu,24,6.63
+anghelescu,29,7.84
+dragomirescu,32,7.53
