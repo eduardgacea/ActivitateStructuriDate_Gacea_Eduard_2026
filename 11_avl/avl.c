@@ -52,6 +52,40 @@ Nod* initializareNod(Produs p) {
     return n;
 }
 
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+int getInaltimeArbore(Nod* rad) {
+    if(rad) {
+        return 1 + max(getInaltimeArbore(rad->st), getInaltimeArbore(rad->dr));
+    }
+
+    return 0;
+}
+
+int getDiferenteInaltimi(Nod* rad) {
+    if(rad) {
+        return getInaltimeArbore(rad->st) - getInaltimeArbore(rad->dr);
+    }
+
+    return 0;
+}
+
+void rotireLaStanga(Nod** rad) {
+    Nod* aux = (*rad)->dr;
+    (*rad)->dr = aux->st;
+    aux->st = (*rad);
+    (*rad) = aux;
+}
+
+void rotireLaDreapta(Nod** rad) {
+    Nod* aux = (*rad)->st;
+    (*rad)->st = aux->dr;
+    aux->dr = (*rad);
+    (*rad) = aux;
+}
+
 void inserare(Nod** rad, Produs p) {
     if(*rad == NULL) {
         Nod* n = initializareNod(p);
@@ -64,6 +98,24 @@ void inserare(Nod** rad, Produs p) {
         if(p.cantitate > (*rad)->produs.cantitate) {
             inserare(&(*rad)->dr, p);
         }
+    }
+
+    int diferentaInaltimi = getDiferenteInaltimi(*rad);
+
+    // dezechilibru stanga
+    if(diferentaInaltimi == 2) {
+        if(getDiferenteInaltimi((*rad)->st) == -1) {
+            rotireLaStanga(&(*rad)->st);
+        }
+        rotireLaDreapta(rad);
+    }
+
+    // dezechilibru dreapta
+    if(diferentaInaltimi == -2) {
+        if(getDiferenteInaltimi((*rad)->dr) == 1){
+            rotireLaDreapta(&(*rad)->dr);
+        }
+        rotireLaStanga(rad);
     }
 }
 
@@ -140,18 +192,6 @@ Produs getProdusByCantitate(Nod* rad, int cantitate) {
 int getNumarNoduri(Nod* rad) {
     if(rad) {
         return 1 + getNumarNoduri(rad->st) + getNumarNoduri(rad->dr);
-    }
-
-    return 0;
-}
-
-int max(int a, int b) {
-    return a > b ? a : b;
-}
-
-int getInaltimeArbore(Nod* rad) {
-    if(rad) {
-        return 1 + max(getInaltimeArbore(rad->st), getInaltimeArbore(rad->dr));
     }
 
     return 0;
