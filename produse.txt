@@ -1,0 +1,15 @@
+Paine,25,7.50
+Lapte,40,9.99
+Orez,30,14.25
+Zahar,20,6.80
+Faina,18,5.40
+Cafea,12,28.90
+Miere,10,32.50
+Iaurt,35,4.99
+Branza,15,21.75
+Unt,22,13.60
+Paste,27,8.45
+Cereale,14,17.30
+Biscuiti,33,6.99
+Ciocolata,50,5.75
+Suc,45,7.20
